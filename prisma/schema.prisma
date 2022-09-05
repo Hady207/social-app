@@ -1,0 +1,87 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  firstName    String?
+  lastName     String?
+  username     String     @unique
+  password     String
+  location     String?
+  role         Role       @default(USER)
+  writtenPosts Post[]     @relation("author")
+  likedPosts   Post[]     @relation("usersLikedIt")
+  savedPosts   Post[]     @relation("usersSavedIt")
+  Comments     Comments[] @relation("commenter")
+  joinedDate   DateTime   @default(now())
+  followedBy   User[]     @relation("UserFollows")
+  following    User[]     @relation("UserFollows")
+}
+
+model Post {
+  id         String     @id @default(uuid())
+  title      String
+  content    String?
+  image      String?
+  video      String?
+  published  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  author     User       @relation("author", fields: [authorId], references: [id])
+  authorId   String
+  likedBy    User[]     @relation("usersLikedIt")
+  savedBy    User[]     @relation("usersSavedIt")
+  category   Category   @relation(fields: [categoryId], references: [id])
+  categoryId String
+  comments   Comments[]
+}
+
+model Comments {
+  id             String     @id @default(uuid())
+  comment        String
+  likes          Int
+  dislikes       Int
+  commentedBy    User       @relation("commenter", fields: [commentorId], references: [id])
+  commentorId    String
+  Post           Post       @relation(fields: [postId], references: [id])
+  postId         String
+  commentsTheard Comments[] @relation("commentThread")
+  Comments       Comments?  @relation("commentThread", fields: [commentsId], references: [id])
+  commentsId     String?
+}
+
+model Category {
+  id            String      @id @default(uuid())
+  name          Translation @relation(fields: [translationId], references: [id])
+  translationId String      @unique
+  Post          Post[]
+}
+
+model Tags {
+  id   String @id @default(uuid())
+  name String @unique
+}
+
+model Translation {
+  id       String    @id @default(uuid())
+  text_en  String
+  text_ar  String
+  Category Category?
+}
+
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
