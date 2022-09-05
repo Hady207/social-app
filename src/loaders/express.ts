@@ -3,6 +3,7 @@ import { Express, json, urlencoded } from 'express';
 import userRoute from '../routes/userRoute';
 import postRoute from '../routes/postRoute';
 import categoryRoute from '../routes/categoryRoute';
+import commentRoute from '../routes/commentRoute';
 
 import { errorHandler } from '../errors/errorHandler';
 
@@ -17,10 +18,11 @@ const expressLoader = ({ app }: expressInterface) => {
 
   // adding routes as middleware here
   app.get('/', (req, res) => res.send('hello docker104'));
-  // app.use('/api/v1/conversation', conversationRoute);
+
   app.use('/api/v1/user', userRoute);
   app.use('/api/v1/post', postRoute);
   app.use('/api/v1/categories', categoryRoute);
+  app.use('/api/v1/comments', commentRoute);
 
   // error middleware should be the last middleware
   app.use(errorHandler);

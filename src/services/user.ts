@@ -4,8 +4,25 @@ import { ErrorException } from '../errors/errorException';
 
 export class UserServices {
   async getUsers() {
-    const users = await DBClient.instance.user.findMany();
-    return users;
+    try {
+      const users = await DBClient.instance.user.findMany();
+      return users;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async getUser(userId: string) {
+    try {
+      const users = await DBClient.instance.user.findUnique({
+        where: {
+          id: userId,
+        },
+      });
+      return users;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 
   async createUser(body: {
@@ -28,7 +45,37 @@ export class UserServices {
     }
   }
 
+  async updateUser(
+    userId: string,
+    body: {
+      username: string;
+      password: string;
+      email: string;
+    },
+  ) {
+    try {
+      const { username, password, email } = body;
+      const user = await DBClient.instance.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          username,
+          password,
+          email,
+        },
+      });
+      return user;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
   async deleteUsers() {
-    await DBClient.instance.user.deleteMany();
+    try {
+      await DBClient.instance.user.deleteMany();
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 }

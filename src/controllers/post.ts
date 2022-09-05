@@ -5,6 +5,7 @@ import catchAsync from '../utils/catchAsync';
 const PostInstance = new PostService();
 
 export class PostController {
+  @catchAsync()
   async getPosts(req: Request, res: Response) {
     const posts = await PostInstance.getPosts();
     res.status(200).json({
@@ -12,7 +13,7 @@ export class PostController {
       data: posts,
     });
   }
-
+  @catchAsync()
   async getPost(req: Request, res: Response) {
     const post = await PostInstance.getPost(req.params.id);
     res.status(200).json({
@@ -20,7 +21,7 @@ export class PostController {
       data: post,
     });
   }
-
+  @catchAsync()
   async createPost(req: Request, res: Response) {
     const postCreated = await PostInstance.createPost(req.body);
     res.status(201).json({
@@ -28,7 +29,7 @@ export class PostController {
       data: postCreated,
     });
   }
-
+  @catchAsync()
   async updatePost(req: Request, res: Response) {
     const updatedPost = await PostInstance.updatePost(req.params.id, req.body);
 
@@ -37,7 +38,7 @@ export class PostController {
       data: updatedPost,
     });
   }
-
+  @catchAsync()
   async deleteAllPosts(req: Request, res: Response) {
     await PostInstance.deletePosts();
     res.status(204).json({

@@ -6,7 +6,20 @@ import { PostInterface } from '../types/tablesTypes';
 export class PostService {
   async getPosts() {
     try {
-      const posts = await DBClient.instance.post.findMany();
+      const posts = await DBClient.instance.post.findMany({
+        include: {
+          likedBy: {
+            select: {
+              id: true,
+            },
+          },
+          savedBy: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      });
       return posts;
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
@@ -19,7 +32,13 @@ export class PostService {
         id: postId,
       },
       include: {
-        likedBy: true,
+        likedBy: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        comments: true,
       },
     });
     return post;
