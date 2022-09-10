@@ -6,7 +6,10 @@ import { PostInterface } from '../types/tablesTypes';
 export class PostService {
   async getPosts() {
     try {
-      const posts = await DBClient.instance.post.findMany({
+      const queryData: any = {
+        orderBy: {
+          createdAt: 'asc',
+        },
         include: {
           likedBy: {
             select: {
@@ -19,7 +22,9 @@ export class PostService {
             },
           },
         },
-      });
+      };
+
+      const posts = await DBClient.instance.post.findMany(queryData);
       return posts;
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
@@ -27,21 +32,25 @@ export class PostService {
   }
 
   async getPost(postId: string) {
-    const post = await DBClient.instance.post.findUnique({
-      where: {
-        id: postId,
-      },
-      include: {
-        likedBy: {
-          select: {
-            id: true,
-            username: true,
-          },
+    try {
+      const post = await DBClient.instance.post.findUnique({
+        where: {
+          id: postId,
         },
-        comments: true,
-      },
-    });
-    return post;
+        include: {
+          likedBy: {
+            select: {
+              id: true,
+              username: true,
+            },
+          },
+          comments: true,
+        },
+      });
+      return post;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 
   async createPost(body: {
@@ -49,45 +58,83 @@ export class PostService {
     category: { id: string };
     authorId: string;
   }) {
-    const { title, category, authorId } = body;
-    const post = await DBClient.instance.post.create({
-      data: {
-        title: title,
-        category: {
-          connect: {
-            id: category.id,
+    try {
+      const { title, category, authorId } = body;
+      const post = await DBClient.instance.post.create({
+        data: {
+          title: title,
+          category: {
+            connect: {
+              id: category.id,
+            },
+          },
+          author: {
+            connect: {
+              id: authorId,
+            },
           },
         },
-        author: {
-          connect: {
-            id: authorId,
+      });
+      return post;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  // Testing
+  async populateTestPosts(postsNumber: number) {
+    try {
+      for (let i = 0; i < postsNumber; i++) {
+        await DBClient.instance.post.create({
+          data: {
+            title: `this is the ${i} post in the appz`,
+            category: {
+              connect: {
+                id: 'b5952809-98ad-457f-9150-d6c5ce387349',
+              },
+            },
+            author: {
+              connect: {
+                id: '1ad0c85c-9595-48ff-a56e-0648035cd4d7',
+              },
+            },
           },
-        },
-      },
-    });
-    return post;
+        });
+      }
+      return true;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 
   async updatePost(
     postId: string,
     updatedBody: { title: string; content: string },
   ) {
-    const optionBody = {
-      where: {
-        id: postId,
-      },
-      data: {
-        title: updatedBody.title,
-        content: updatedBody.content,
-      },
-    };
+    try {
+      const optionBody = {
+        where: {
+          id: postId,
+        },
+        data: {
+          title: updatedBody.title,
+          content: updatedBody.content,
+        },
+      };
 
-    return await DBClient.instance.post.update(optionBody);
+      return await DBClient.instance.post.update(optionBody);
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 
   async deletePosts() {
-    const deletedPosts = await DBClient.instance.post.deleteMany();
-    return deletedPosts;
+    try {
+      const deletedPosts = await DBClient.instance.post.deleteMany();
+      return deletedPosts;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
   }
 
   async deletePost(postId: string) {

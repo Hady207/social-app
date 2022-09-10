@@ -18,6 +18,8 @@ router
   .get(PostControllerRoute.getPost)
   .patch(PostControllerRoute.updatePost);
 
+router.post('/populatePosts', PostControllerRoute.populatePosts);
+
 router.route('/likePost/:id').post(PostControllerRoute.likePost);
 router.route('/savePost/:id').post(PostControllerRoute.savePost);
 

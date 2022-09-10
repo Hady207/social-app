@@ -17,7 +17,7 @@ const expressLoader = ({ app }: expressInterface) => {
   app.use(urlencoded({ extended: true, limit: '10kb' }));
 
   // adding routes as middleware here
-  app.get('/', (req, res) => res.send('hello docker104'));
+  // app.get('/', (req, res) => res.send('hello docker104'));
 
   app.use('/api/v1/user', userRoute);
   app.use('/api/v1/post', postRoute);
