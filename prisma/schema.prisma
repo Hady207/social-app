@@ -12,21 +12,24 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
-  email        String     @unique
-  firstName    String?
-  lastName     String?
-  username     String     @unique
-  password     String
-  location     String?
-  role         Role       @default(USER)
-  writtenPosts Post[]     @relation("author")
-  likedPosts   Post[]     @relation("usersLikedIt")
-  savedPosts   Post[]     @relation("usersSavedIt")
-  Comments     Comments[] @relation("commenter")
-  joinedDate   DateTime   @default(now())
-  followedBy   User[]     @relation("UserFollows")
-  following    User[]     @relation("UserFollows")
+  id               String     @id @default(uuid())
+  email            String     @unique
+  firstName        String?
+  lastName         String?
+  username         String     @unique
+  profile          String?
+  password         String
+  location         String?
+  role             Role       @default(USER)
+  writtenPosts     Post[]     @relation("author")
+  likedPosts       Post[]     @relation("usersLikedIt")
+  savedPosts       Post[]     @relation("usersSavedIt")
+  Comments         Comments[] @relation("commenter")
+  joinedDate       DateTime   @default(now())
+  followedBy       User[]     @relation("UserFollows")
+  following        User[]     @relation("UserFollows")
+  likedComments    Comments[] @relation("userLikedComment")
+  dislikedComments Comments[] @relation("userDislikedComment")
 }
 
 model Post {
@@ -50,10 +53,12 @@ model Post {
 model Comments {
   id             String     @id @default(uuid())
   comment        String
-  likes          Int
-  dislikes       Int
+  likes          User[]     @relation("userLikedComment")
+  dislikes       User[]     @relation("userDislikedComment")
   commentedBy    User       @relation("commenter", fields: [commentorId], references: [id])
   commentorId    String
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime?  @updatedAt
   Post           Post       @relation(fields: [postId], references: [id])
   postId         String
   commentsTheard Comments[] @relation("commentThread")
@@ -66,6 +71,8 @@ model Category {
   name          Translation @relation(fields: [translationId], references: [id])
   translationId String      @unique
   Post          Post[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime?   @updatedAt
 }
 
 model Tags {
@@ -74,10 +81,12 @@ model Tags {
 }
 
 model Translation {
-  id       String    @id @default(uuid())
-  text_en  String
-  text_ar  String
-  Category Category?
+  id        String    @id @default(uuid())
+  text_en   String
+  text_ar   String
+  Category  Category?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
 }
 
 enum Role {

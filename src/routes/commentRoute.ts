@@ -16,6 +16,8 @@ router
 router
   .route('/:id')
   .get(CommentControllerRoute.getComment)
-  .patch(CommentControllerRoute.updateComment);
+  .post(CommentControllerRoute.replayToComment)
+  .patch(CommentControllerRoute.updateComment)
+  .delete(CommentControllerRoute.deleteComment);
 
 export default router;

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { emitWarning } from 'process';
 import { CommentServices } from '../services/comment';
 import catchAsync from '../utils/catchAsync';
 
@@ -13,6 +14,7 @@ export class CommentController {
       data: comments,
     });
   }
+
   @catchAsync()
   async getComment(req: Request, res: Response) {
     const comments = await CommentInstance.getComment(req.params.id);
@@ -21,6 +23,7 @@ export class CommentController {
       data: comments,
     });
   }
+
   @catchAsync()
   async createComment(req: Request, res: Response) {
     const comment = await CommentInstance.createComment(req.body);
@@ -29,23 +32,46 @@ export class CommentController {
       data: comment,
     });
   }
+
   @catchAsync()
   async updateComment(req: Request, res: Response) {
-    const comments = await CommentInstance.updateComment(
+    const comment = await CommentInstance.updateComment(
       req.params.id,
       req.body,
     );
     res.status(200).json({
       status: 'success',
-      data: comments,
+      data: comment,
     });
   }
+
+  @catchAsync()
+  async replayToComment(req: Request, res: Response) {
+    const comment = await CommentInstance.replayComment(
+      req.params.id,
+      req.body,
+    );
+    res.status(200).json({
+      status: 'success',
+      data: comment,
+    });
+  }
+
   @catchAsync()
   async deleteComments(req: Request, res: Response) {
     await CommentInstance.deleteComments();
     res.status(204).json({
       status: 'success',
-      data: 'posts deleted',
+      data: 'comments deleted',
+    });
+  }
+
+  @catchAsync()
+  async deleteComment(req: Request, res: Response) {
+    await CommentInstance.deleteComment(req.params.id);
+    res.status(204).json({
+      status: 'success',
+      data: 'comment deleted',
     });
   }
 }

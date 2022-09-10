@@ -1,6 +1,12 @@
 import DBClient from '../models/prismaClient';
 import { ErrorException } from '../errors/errorException';
 
+type CommentBody = {
+  comment: string;
+  postId: string;
+  userId: string;
+};
+
 export class CommentServices {
   async getComments() {
     try {
@@ -31,6 +37,18 @@ export class CommentServices {
             select: {
               id: true,
               username: true,
+              profile: true,
+            },
+          },
+          commentsTheard: {
+            include: {
+              commentedBy: {
+                select: {
+                  id: true,
+                  username: true,
+                  profile: true,
+                },
+              },
             },
           },
         },
@@ -41,16 +59,12 @@ export class CommentServices {
     }
   }
 
-  async createComment(body: {
-    comment: string;
-    postId: string;
-    userId: string;
-  }) {
+  async createComment(body: CommentBody) {
     try {
       const creationBody: any = {
         data: {
           comment: body.comment,
-          post: {
+          Post: {
             connect: {
               id: body.postId,
             },
@@ -102,6 +116,43 @@ export class CommentServices {
         },
       });
       return deletedComment;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async replayComment(commentId: string, body: CommentBody) {
+    try {
+      const updateBody: any = {
+        where: { id: commentId },
+        data: {
+          commentsTheard: {
+            create: {
+              comment: body.comment,
+              Post: {
+                connect: {
+                  id: body.postId,
+                },
+              },
+              commentedBy: {
+                connect: {
+                  id: body.userId,
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const comment = await DBClient.instance.comments.update(updateBody);
+      return comment;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async updateRepliedComment(commentId: string, comment: string) {
+    try {
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
     }
