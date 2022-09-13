@@ -1,5 +1,4 @@
 // router example
-
 import { Router } from 'express';
 import { PostController } from '../controllers/post';
 
@@ -18,9 +17,13 @@ router
   .get(PostControllerRoute.getPost)
   .patch(PostControllerRoute.updatePost);
 
-router.post('/populatePosts', PostControllerRoute.populatePosts);
+if (process.env.NODE_ENV === 'DEVELOPMENT') {
+  router.post('/populatePosts', PostControllerRoute.populatePosts);
+}
 
-router.route('/likePost/:id').post(PostControllerRoute.likePost);
-router.route('/savePost/:id').post(PostControllerRoute.savePost);
+router.route('/like/:id').post(PostControllerRoute.likePost);
+router.route('/save`/:id').post(PostControllerRoute.savePost);
+router.route('/publish/:id').patch(PostControllerRoute.publishPost);
+router.route('/unpublish/:id').patch(PostControllerRoute.unpublishPost);
 
 export default router;

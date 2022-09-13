@@ -144,8 +144,7 @@ export class CommentServices {
         },
       };
 
-      const comment = await DBClient.instance.comments.update(updateBody);
-      return comment;
+      return await DBClient.instance.comments.update(updateBody);
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
     }

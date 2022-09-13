@@ -7,7 +7,7 @@ const PostInstance = new PostService();
 export class PostController {
   @catchAsync()
   async getPosts(req: Request, res: Response) {
-    const posts = await PostInstance.getPosts();
+    const posts = await PostInstance.getPosts(req.query);
     res.status(200).json({
       status: 'success',
       data: posts,
@@ -44,6 +44,26 @@ export class PostController {
   @catchAsync()
   async updatePost(req: Request, res: Response) {
     const updatedPost = await PostInstance.updatePost(req.params.id, req.body);
+
+    res.status(202).json({
+      status: 'success',
+      data: updatedPost,
+    });
+  }
+
+  @catchAsync()
+  async publishPost(req: Request, res: Response) {
+    const updatedPost = await PostInstance.publishPost(req.params.id);
+
+    res.status(202).json({
+      status: 'success',
+      data: updatedPost,
+    });
+  }
+
+  @catchAsync()
+  async unpublishPost(req: Request, res: Response) {
+    const updatedPost = await PostInstance.unpublishPost(req.params.id);
 
     res.status(202).json({
       status: 'success',

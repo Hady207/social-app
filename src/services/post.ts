@@ -2,27 +2,30 @@
 import { ErrorException } from '../errors/errorException';
 import DBClient from '../models/prismaClient';
 import { PostInterface } from '../types/tablesTypes';
+import { restApiFeatures } from '../utils/apiFeatures';
 
 export class PostService {
-  async getPosts() {
+  async getPosts(queries: any) {
     try {
-      const queryData: any = {
-        orderBy: {
-          createdAt: 'asc',
-        },
-        include: {
-          likedBy: {
-            select: {
-              id: true,
-            },
-          },
-          savedBy: {
-            select: {
-              id: true,
-            },
-          },
-        },
-      };
+      const queryData: any = restApiFeatures(queries);
+      console.log(queryData);
+      // const queryData: any = {
+      //   orderBy: {
+      //     createdAt: 'asc',
+      //   },
+      //   include: {
+      //     likedBy: {
+      //       select: {
+      //         id: true,
+      //       },
+      //     },
+      //     savedBy: {
+      //       select: {
+      //         id: true,
+      //       },
+      //     },
+      //   },
+      // };
 
       const posts = await DBClient.instance.post.findMany(queryData);
       return posts;
@@ -143,6 +146,36 @@ export class PostService {
         where: { id: postId },
       });
       return deletedPosts;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async publishPost(postId: string) {
+    try {
+      return await DBClient.instance.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          published: true,
+        },
+      });
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async unpublishPost(postId: string) {
+    try {
+      return await DBClient.instance.post.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          published: false,
+        },
+      });
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
     }
