@@ -1,11 +1,6 @@
-import DBClient from '../models/prismaClient';
-import { ErrorException } from '../errors/errorException';
-
-type CommentBody = {
-  comment: string;
-  postId: string;
-  userId: string;
-};
+import DBClient from '../../models/prismaClient';
+import { ErrorException } from '../../errors/errorException';
+import { CommentBody } from './types/comment';
 
 export class CommentServices {
   async getComments() {

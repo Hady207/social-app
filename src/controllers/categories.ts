@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { CategoryService } from '../services/category';
+import { CategoryService } from '../services/category/category.service';
 import catchAsync from '../utils/catchAsync';
 
 const CategoryServiceI = new CategoryService();

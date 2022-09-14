@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { PostService } from '../services/post';
+import { PostService } from '../services/post/post.service';
 import catchAsync from '../utils/catchAsync';
 
 const PostInstance = new PostService();

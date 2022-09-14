@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserServices } from '../services/user';
+import { UserServices } from '../services/user/user.service';
 import catchAsync from '../utils/catchAsync';
 
 const UserService = new UserServices();

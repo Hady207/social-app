@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
-import { emitWarning } from 'process';
-import { CommentServices } from '../services/comment';
+import { CommentServices } from '../services/comment/comment.service';
 import catchAsync from '../utils/catchAsync';
 
 const CommentInstance = new CommentServices();

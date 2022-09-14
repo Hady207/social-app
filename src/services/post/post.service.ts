@@ -1,8 +1,8 @@
 // Services example
-import { ErrorException } from '../errors/errorException';
-import DBClient from '../models/prismaClient';
-import { Post } from '../types/schemaTypes';
-import { restApiFeatures } from '../utils/apiFeatures';
+import { ErrorException } from '../../errors/errorException';
+import DBClient from '../../models/prismaClient';
+import { Post } from './types/post';
+import { restApiFeatures } from '../../utils/apiFeatures';
 
 export class PostService {
   async getPosts(queries: any): Promise<Post[]> {

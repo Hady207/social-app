@@ -1,6 +1,6 @@
-import { User } from '../types/schemaTypes';
-import DBClient from '../models/prismaClient';
-import { ErrorException } from '../errors/errorException';
+import DBClient from '../../models/prismaClient';
+import { User } from './types/user';
+import { ErrorException } from '../../errors/errorException';
 
 export class UserServices {
   async getUsers(): Promise<User[]> {

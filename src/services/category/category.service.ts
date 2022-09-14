@@ -1,5 +1,6 @@
-import DBClient from '../models/prismaClient';
-import { ErrorException } from '../errors/errorException';
+import DBClient from '../../models/prismaClient';
+import { ErrorException } from '../../errors/errorException';
+
 export class CategoryService {
   async getCategories(): Promise<any[]> {
     try {
