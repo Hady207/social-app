@@ -1,7 +1,7 @@
 import expressLoader from './express';
 
 const loaders = async (app: any) => {
-  await expressLoader({ app });
+  await expressLoader(app);
   console.log('Express Initialized');
 
   // ... more loaders can be here

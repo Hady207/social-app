@@ -7,11 +7,7 @@ import commentRoute from '../routes/comment.route';
 
 import { errorHandler } from '../errors/errorHandler';
 
-interface expressInterface {
-  app: Express;
-}
-
-const expressLoader = ({ app }: expressInterface) => {
+const expressLoader = (app: Express) => {
   // Body parser, reading data from body into req.body
   app.use(json({ limit: '10kb' }));
   app.use(urlencoded({ extended: true, limit: '10kb' }));
