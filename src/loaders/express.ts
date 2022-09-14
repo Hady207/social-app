@@ -1,9 +1,9 @@
 import { Express, json, urlencoded } from 'express';
 
-import userRoute from '../routes/userRoute';
-import postRoute from '../routes/postRoute';
-import categoryRoute from '../routes/categoryRoute';
-import commentRoute from '../routes/commentRoute';
+import userRoute from '../routes/user.route';
+import postRoute from '../routes/post.route';
+import categoryRoute from '../routes/category.route';
+import commentRoute from '../routes/comment.route';
 
 import { errorHandler } from '../errors/errorHandler';
 
