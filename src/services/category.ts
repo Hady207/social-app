@@ -1,7 +1,7 @@
 import DBClient from '../models/prismaClient';
 import { ErrorException } from '../errors/errorException';
 export class CategoryService {
-  async getCategories() {
+  async getCategories(): Promise<any[]> {
     try {
       const categories = await DBClient.instance.category.findMany({
         include: {
@@ -14,7 +14,7 @@ export class CategoryService {
     }
   }
 
-  async createCategory(body: any) {
+  async createCategory(body: any): Promise<any> {
     try {
       const category = await DBClient.instance.category.create({
         data: {
@@ -32,7 +32,7 @@ export class CategoryService {
     }
   }
 
-  async updateCategory(categoryId: string, body: any) {
+  async updateCategory(categoryId: string, body: any): Promise<any> {
     try {
       const category = await DBClient.instance.category.update({
         where: { id: categoryId },

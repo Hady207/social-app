@@ -1,9 +1,9 @@
-import catchAsync from '../utils/catchAsync';
+import { User } from '../types/schemaTypes';
 import DBClient from '../models/prismaClient';
 import { ErrorException } from '../errors/errorException';
 
 export class UserServices {
-  async getUsers() {
+  async getUsers(): Promise<User[]> {
     try {
       const users = await DBClient.instance.user.findMany();
       return users;
@@ -12,14 +12,17 @@ export class UserServices {
     }
   }
 
-  async getUser(userId: string) {
+  async getUser(userId: string): Promise<User | string> {
     try {
-      const users = await DBClient.instance.user.findUnique({
+      const user = await DBClient.instance.user.findUnique({
         where: {
           id: userId,
         },
       });
-      return users;
+      if (!user?.id) {
+        return 'no user with that id';
+      }
+      return user;
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);
     }
@@ -29,7 +32,7 @@ export class UserServices {
     username: string;
     password: string;
     email: string;
-  }) {
+  }): Promise<User> {
     try {
       const { username, password, email } = body;
       const user = await DBClient.instance.user.create({
@@ -52,7 +55,7 @@ export class UserServices {
       password: string;
       email: string;
     },
-  ) {
+  ): Promise<User> {
     try {
       const { username, password, email } = body;
       const user = await DBClient.instance.user.update({

@@ -1,31 +1,13 @@
 // Services example
 import { ErrorException } from '../errors/errorException';
 import DBClient from '../models/prismaClient';
-import { PostInterface } from '../types/tablesTypes';
+import { Post } from '../types/schemaTypes';
 import { restApiFeatures } from '../utils/apiFeatures';
 
 export class PostService {
-  async getPosts(queries: any) {
+  async getPosts(queries: any): Promise<Post[]> {
     try {
       const queryData: any = restApiFeatures(queries);
-      console.log(queryData);
-      // const queryData: any = {
-      //   orderBy: {
-      //     createdAt: 'asc',
-      //   },
-      //   include: {
-      //     likedBy: {
-      //       select: {
-      //         id: true,
-      //       },
-      //     },
-      //     savedBy: {
-      //       select: {
-      //         id: true,
-      //       },
-      //     },
-      //   },
-      // };
 
       const posts = await DBClient.instance.post.findMany(queryData);
       return posts;
@@ -50,6 +32,7 @@ export class PostService {
           comments: true,
         },
       });
+
       return post;
     } catch (error: any) {
       throw new ErrorException(error.code, error.message);

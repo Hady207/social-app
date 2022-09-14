@@ -14,4 +14,6 @@ router
   .post(UserControllerRoute.createUser)
   .delete(UserControllerRoute.deleteUsers);
 
+router.route('/:id').get(UserControllerRoute.getUser);
+
 export default router;

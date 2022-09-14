@@ -31,6 +31,13 @@ export const restApiFeatures = (query?: Query) => {
         createdAt: 'desc',
       },
       include: {
+        author: {
+          select: {
+            id: true,
+            username: true,
+            profile: true,
+          },
+        },
         likedBy: {
           select: {
             id: true,
