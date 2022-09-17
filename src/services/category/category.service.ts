@@ -1,6 +1,6 @@
 import DBClient, { IDBClient } from '../../models/prismaClient';
 import { ErrorException } from '../../errors/errorException';
-import { ICategroyService } from './types/category';
+import { ICategroyService, Category } from './types/category';
 
 export class CategoryService implements ICategroyService {
   private categoryModal: IDBClient;
@@ -8,7 +8,7 @@ export class CategoryService implements ICategroyService {
     this.categoryModal = DBClient;
   }
 
-  async getCategories(): Promise<any[]> {
+  async getCategories(): Promise<Category[]> {
     try {
       const categories = await this.categoryModal.instance.category.findMany({
         include: {
@@ -21,7 +21,7 @@ export class CategoryService implements ICategroyService {
     }
   }
 
-  async getCategory(categoryId: string): Promise<any> {
+  async getCategory(categoryId: string): Promise<Category | null> {
     try {
       const category = await this.categoryModal.instance.category.findUnique({
         where: {
@@ -34,7 +34,10 @@ export class CategoryService implements ICategroyService {
     }
   }
 
-  async createCategory(body: { nameEn: string; nameAr: string }): Promise<any> {
+  async createCategory(body: {
+    nameEn: string;
+    nameAr: string;
+  }): Promise<Category> {
     try {
       const category = await DBClient.instance.category.create({
         data: {
@@ -52,7 +55,10 @@ export class CategoryService implements ICategroyService {
     }
   }
 
-  async updateCategory(categoryId: string, body: any): Promise<any> {
+  async updateCategory(
+    categoryId: string,
+    body: { nameEn: string; nameAr: string },
+  ): Promise<Category> {
     try {
       const category = await DBClient.instance.category.update({
         where: { id: categoryId },
@@ -71,7 +77,7 @@ export class CategoryService implements ICategroyService {
     }
   }
 
-  async deleteCategories() {
+  async deleteCategories(): Promise<any> {
     try {
       return await DBClient.instance.category.deleteMany();
     } catch (error: any) {
@@ -79,7 +85,7 @@ export class CategoryService implements ICategroyService {
     }
   }
 
-  async deleteCategory(categoryId: string) {
+  async deleteCategory(categoryId: string): Promise<Category> {
     try {
       const deletedCategory = await DBClient.instance.category.delete({
         where: {

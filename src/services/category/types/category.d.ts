@@ -1,10 +1,10 @@
 export type Category = {
   id: string;
-  name: Translation;
+  name?: Translation | null;
   translationId: string;
-  Post: Post[];
+  Post?: Post[] | null;
   createdAt: Date;
-  updatedAt?: Date;
+  updatedAt: Date | null;
 };
 
 export type Translation = {
@@ -12,14 +12,18 @@ export type Translation = {
   text_en: string;
   text_ar: string;
   Category?: Category;
-  createdAt: Date;
-  updatedAt?: Date;
+  createdAt?: Date;
+  updatedAt?: Date | null;
 };
 
 export interface ICategroyService {
-  getCategories(): Promise<any[]>;
-  createCategory(body: any): Promise<any>;
-  updateCategory(categoryId: string, body: any): Promise<any>;
-  deleteCategories(): Promise<any>;
-  deleteCategory(categoryId: string): Promise<any>;
+  getCategories(): Promise<Category[]>;
+  getCategory(categoryId: string): Promise<Category | null>;
+  createCategory(body: { nameEn: string; nameAr: string }): Promise<Category>;
+  updateCategory(
+    categoryId: string,
+    body: { nameEn: string; nameAr: string },
+  ): Promise<Category>;
+  deleteCategories(): Promise<Category>;
+  deleteCategory(categoryId: string): Promise<Category>;
 }
