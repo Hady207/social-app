@@ -3,6 +3,7 @@ import { UserServices } from '../services/user/user.service';
 import catchAsync from '../utils/catchAsync';
 
 const UserService = new UserServices();
+
 export class UserController {
   @catchAsync()
   async getUsers(req: Request, res: Response): Promise<void> {

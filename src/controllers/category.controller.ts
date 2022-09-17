@@ -6,13 +6,22 @@ const CategoryServiceI = new CategoryService();
 
 export class CategoriesController {
   @catchAsync()
-  async getCategory(req: Request, res: Response): Promise<void> {
+  async getCategories(req: Request, res: Response): Promise<void> {
     const categories = await CategoryServiceI.getCategories();
     res.status(200).json({
       status: 'success',
       data: categories,
     });
   }
+
+  async getCategory(req: Request, res: Response): Promise<void> {
+    const categories = await CategoryServiceI.getCategory(req.params.id);
+    res.status(200).json({
+      status: 'success',
+      data: categories,
+    });
+  }
+
   @catchAsync()
   async createCategory(req: Request, res: Response): Promise<void> {
     const categoryCreated = await CategoryServiceI.createCategory(req.body);

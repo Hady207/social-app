@@ -1,10 +1,16 @@
-import DBClient from '../../models/prismaClient';
+import DBClient, { IDBClient } from '../../models/prismaClient';
 import { ErrorException } from '../../errors/errorException';
+import { ICategroyService } from './types/category';
 
-export class CategoryService {
+export class CategoryService implements ICategroyService {
+  private categoryModal: IDBClient;
+  constructor() {
+    this.categoryModal = DBClient;
+  }
+
   async getCategories(): Promise<any[]> {
     try {
-      const categories = await DBClient.instance.category.findMany({
+      const categories = await this.categoryModal.instance.category.findMany({
         include: {
           name: true,
         },
@@ -15,7 +21,20 @@ export class CategoryService {
     }
   }
 
-  async createCategory(body: any): Promise<any> {
+  async getCategory(categoryId: string): Promise<any> {
+    try {
+      const category = await this.categoryModal.instance.category.findUnique({
+        where: {
+          id: categoryId,
+        },
+      });
+      return category;
+    } catch (error: any) {
+      throw new ErrorException(error.code, error.message);
+    }
+  }
+
+  async createCategory(body: { nameEn: string; nameAr: string }): Promise<any> {
     try {
       const category = await DBClient.instance.category.create({
         data: {
